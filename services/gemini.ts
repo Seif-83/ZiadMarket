@@ -1,37 +1,26 @@
 
-import { GoogleGenAI } from "@google/genai";
+// Frontend-safe AI call: proxy requests to a backend endpoint.
+// This avoids bundling server-side SDKs or exposing API keys in the browser.
 
-// Note: API_KEY should be set as an environment variable
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
-
-let ai: InstanceType<typeof GoogleGenAI> | null = null;
-
-if (apiKey) {
-  try {
-    ai = new GoogleGenAI({ apiKey });
-  } catch (e) {
-    console.warn('Failed to initialize Gemini AI:', e);
-  }
-}
+const FALLBACK = (name: string) => `معلومات عن ${name}:\n• فوائد صحية متعددة\n• غني بالعناصر الغذائية\n• استخدام تقليدي عريق`;
 
 export const getHerbalBenefits = async (itemName: string): Promise<string> => {
-  if (!ai) {
-    // Return default benefits if API is not configured
-    return `معلومات عن ${itemName}:\n• فوائد صحية متعددة\n• غني بالعناصر الغذائية\n• استخدام تقليدي عريق`;
-  }
-
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: `بصفتك خبير عطارة وأعشاب، اذكر 3 فوائد صحية باختصار شديد لـ "${itemName}". اجعل الإجابة بلهجة عربية جذابة وودودة بصيغة نقاط مختصرة.`,
-      config: {
-        maxOutputTokens: 200,
-        temperature: 0.7,
-      },
+    const res = await fetch('/api/benefits', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: itemName }),
     });
-    return response.text || "لم يتم العثور على معلومات حالياً.";
-  } catch (error) {
-    console.error("Gemini Error:", error);
-    return "نعتذر، حدث خطأ أثناء جلب المعلومات.";
+
+    if (!res.ok) {
+      console.warn('AI proxy returned', res.status);
+      return FALLBACK(itemName);
+    }
+
+    const json = await res.json();
+    return json.text || FALLBACK(itemName);
+  } catch (err) {
+    console.error('Error calling AI proxy:', err);
+    return FALLBACK(itemName);
   }
 };
