@@ -6,7 +6,7 @@ export enum Category {
   HONEY = 'عسل سدر ونحل',
   NUTS = 'مكسرات وياميش',
   OFFERS = 'عروض خاصة',
-  GNA_BUTTER = 'Gna butter'
+  GNA_BUTTER = 'زبدة جنة بلدي'
 }
 
 export interface Product {
