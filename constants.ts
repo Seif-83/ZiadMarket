@@ -106,11 +106,11 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: '11',
-    name: 'سمنة جنة بلدي',
+    name: 'سمنة جنة الصفرة',
     category: Category.GNA_BUTTER,
     price: 85,
     unit: '700 جرام',
-    description: 'سمنة جنة بلدي طبيعية عالية الجودة.',
+    description: 'سمنة جنة الصفرة طبيعية عالية الجودة.',
     image: 'smna gna.jpg'
   }
 ];
