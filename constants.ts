@@ -111,6 +111,6 @@ export const PRODUCTS: Product[] = [
     price: 85,
     unit: '700 جرام',
     description: 'زبدة جنة بلدي طبيعية عالية الجودة.',
-    image: '/smna gna.jpg'
+    image: 'public/smna gna.jpg'
   }
 ];
